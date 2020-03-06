@@ -19,10 +19,13 @@ connection.once("open", function() {
 
 app.post("/shuffle", (req, res) => {
   // shuffle cards
-  // issue cards as a response
   const sortedDeck = deckLogic.generateSortedDeck();
-  // send formatted deck back to client
-  res.send(deckLogic.formatDeck(sortedDeck));
+  const shuffled = deckLogic.shuffle(sortedDeck);
+  const score = deckLogic.getScore(shuffled);
+  const inOrder = deckLogic.cardsInOrderCount(sortedDeck, shuffled);
+  const percentInOrder = +(inOrder / 52).toFixed(3);
+  // send formatted deck (2d array - 4row x 13col) back to client
+  res.send(deckLogic.formatDeck(shuffled));
 });
 
 app.listen(PORT, function() {
