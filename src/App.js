@@ -7,9 +7,9 @@ class App extends React.Component {
     return (
       <div>
         <div>
-          <h2>LETS GET SHUFFLIN</h2>
+          <h1>Card Shuffler</h1>
         </div>
-        <Deck />
+        <Deck className="center" />
       </div>
     );
   }
