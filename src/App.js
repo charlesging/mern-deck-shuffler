@@ -5,12 +5,12 @@ import Deck from "./Components/Deck";
 class App extends React.Component {
   render() {
     return (
-      <Router>
+      <div>
         <div>
           <h2>LETS GET SHUFFLIN</h2>
         </div>
         <Deck />
-      </Router>
+      </div>
     );
   }
 }
