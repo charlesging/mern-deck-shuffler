@@ -6,7 +6,7 @@ let Deck = new Schema({
     type: Array
   },
   percentCorrect: {
-    type: int
+    type: Number
   }
 });
 
