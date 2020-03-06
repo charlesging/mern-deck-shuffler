@@ -16,10 +16,13 @@ connection.once("open", function() {
   console.log("MongoDB database connection established successfully");
 });
 
-app.post("/", (req, res) => {
+app.post("/shuffle", (req, res) => {
   // shuffle cards
   // issue cards as a response
-  res.send(["c1", "c2"]);
+  res.send([
+    ["c1", "c2"],
+    ["c3", "c4"]
+  ]);
 });
 
 app.listen(PORT, function() {
