@@ -12,7 +12,7 @@ class Deck extends Component {
     axios
       .post("http://localhost:4000/shuffle")
       .then(response => {
-        this.setState({ cards: response.data });
+        this.setState({ cards: response.data.formattedDeck });
       })
       .catch(err => {
         console.log(err);

@@ -20,17 +20,17 @@ connection.once("open", function() {
   console.log("MongoDB database connection established successfully");
 });
 
-// app.get("/decks", (req, res) => {
-//   Deck.find((err, decks) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       res.json(decks);
-//     }
-//   });
-// });
+app.get("/decks", (req, res) => {
+  Deck.find((err, decks) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(decks);
+    }
+  });
+});
 
-app.post("/shuffle", (req, res) => {
+app.post("/shuffle", (req, response) => {
   const sortedDeck = deckLogic.generateSortedDeck();
   const shuffled = deckLogic.shuffle(sortedDeck);
   const score = deckLogic.getScore(shuffled);
@@ -38,19 +38,23 @@ app.post("/shuffle", (req, res) => {
   const percentInOrder = +(inOrder / 52).toFixed(3);
 
   let deck = new Deck({ cards: shuffled, percentCorrect: percentInOrder });
-  // let historicalCorrect
 
-  deck
-    .save()
-    .then(todo => {
-      // send formatted deck (2d array - 4row x 13col) back to client
-      // send { formattedDeck, score, historicalPercentInOrder }
-      // res.send(deckLogic.formatDeck(shuffled));
-      res.send(deckLogic.formatDeck(shuffled));
-    })
-    .catch(err => {
-      res.status(400).send("adding new todo failed");
-    });
+  Deck.aggregate([
+    { $group: { _id: null, avgCorrect: { $avg: "$percentCorrect" } } }
+  ]).then(function(res) {
+    let historicalAverage = res[0].avgCorrect;
+    deck
+      .save()
+      .then(config => {
+        // send formatted deck (2d array - 4row x 13col) back to client
+        // send { formattedDeck, score, historicalPercentInOrder }
+        const formattedDeck = deckLogic.formatDeck(shuffled);
+        response.send({ formattedDeck, score, historicalAverage });
+      })
+      .catch(err => {
+        response.status(400).send("adding new todo failed");
+      });
+  });
 });
 
 app.listen(PORT, function() {
