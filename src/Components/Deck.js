@@ -4,14 +4,9 @@ import axios from "axios";
 
 class Deck extends Component {
   state = {
-    cards: [
-      // ["AS", "2H", "3C"],
-      // ["QD", "KH", "6C"],
-      // ["8H", "9D", "TS"]
-    ]
+    cards: []
   };
 
-  // retrieve cards on mount
   // cards = [[], [], [], []]
   componentDidMount() {
     axios

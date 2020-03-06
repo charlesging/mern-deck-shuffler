@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const deckLogic = require("./deckLogic.js");
 
 const PORT = 4000;
 
@@ -19,10 +20,9 @@ connection.once("open", function() {
 app.post("/shuffle", (req, res) => {
   // shuffle cards
   // issue cards as a response
-  res.send([
-    ["c1", "c2"],
-    ["c3", "c4"]
-  ]);
+  const sortedDeck = deckLogic.generateSortedDeck();
+  // send formatted deck back to client
+  res.send(deckLogic.formatDeck(sortedDeck));
 });
 
 app.listen(PORT, function() {
