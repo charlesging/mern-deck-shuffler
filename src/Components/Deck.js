@@ -1,6 +1,14 @@
 import React, { Component } from "react";
-import Row from "./Row";
+import CardRow from "./Row";
+import Scoreboard from "./Scoreboard";
 import axios from "axios";
+import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import ThemeProvider from "react-bootstrap/ThemeProvider";
 
 class Deck extends Component {
   // { formattedDeck, score, historicalAverage }
@@ -12,6 +20,12 @@ class Deck extends Component {
 
   // cards = [[], [], [], []]
   componentDidMount() {
+    this.shuffle();
+  }
+
+  shuffle = () => {
+    console.log("BUTTON CLICKED TO SHUFFLE");
+
     axios
       .post("http://localhost:4000/shuffle")
       .then(response => {
@@ -24,44 +38,31 @@ class Deck extends Component {
       .catch(err => {
         console.log(err);
       });
-  }
+  };
 
-  rowsList() {
+  rowsList = () => {
     return this.state.cards.map((row, idx) => {
-      return <Row row={row} key={idx} />;
+      return <CardRow row={row} key={idx} />;
     });
-  }
+  };
 
   render() {
-    const shuffle = () => {
-      axios
-        .post("http://localhost:4000/shuffle")
-        .then(response => {
-          this.setState({
-            cards: response.data.formattedDeck,
-            score: response.data.score,
-            historicalAverage: response.data.historicalAverage
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    };
-
     return (
-      <div>
-        <table>
+      <Container>
+        <div className={"container"}>
+          <Button onClick={this.shuffle} variant="primary">
+            Shuffle Cards
+          </Button>{" "}
+        </div>
+        <Table bordered>
           <tbody>{this.rowsList()}</tbody>
-        </table>
-        <button className={"btn-small"} onClick={shuffle}>
-          SHUFFLE CARDS
-        </button>
-        <h2>Score for this round :</h2>
-        <h3>{this.state.score}</h3>
-        <hr />
-        <h2>Historical Percentage of Cards in Correct Postion</h2>
-        <h3>{this.state.historicalAverage}</h3>
-      </div>
+        </Table>{" "}
+        <Scoreboard
+          score={this.state.score}
+          historyAvg={this.state.historicalAverage}
+          className="scoreboard"
+        />
+      </Container>
     );
   }
 }

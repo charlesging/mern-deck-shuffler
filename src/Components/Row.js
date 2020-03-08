@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-const Row = props => {
+const CardRow = props => {
   // Each row will have 13 <td> rows
   return (
     <tr>
@@ -21,4 +21,4 @@ const Row = props => {
   );
 };
 
-export default Row;
+export default CardRow;
